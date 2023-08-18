@@ -16,7 +16,7 @@ class BeaconReferenceApplication: Application() {
         super.onCreate()
 
         val beaconManager = BeaconManager.getInstanceForApplication(this)
-        BeaconManager.setDebug(true)
+        //BeaconManager.setDebug(true)
 
         // By default the AndroidBeaconLibrary will only find AltBeacons.  If you wish to make it
         // find a different type of beacon, you must specify the byte layout for that beacon's
@@ -66,10 +66,10 @@ class BeaconReferenceApplication: Application() {
         // If you want to continuously range beacons in the background more often than every 15 mintues,
         // you can use the library's built-in foreground service to unlock this behavior on Android
         // 8+.   the method below shows how you set that up.
-        //setupForegroundService()
-        //beaconManager.setEnableScheduledScanJobs(false);
-        //beaconManager.setBackgroundBetweenScanPeriod(0);
-        //beaconManager.setBackgroundScanPeriod(1100);
+        setupForegroundService()
+        beaconManager.setEnableScheduledScanJobs(false);
+        beaconManager.setBackgroundBetweenScanPeriod(30000);
+        beaconManager.setBackgroundScanPeriod(10000);
 
         // Ranging callbacks will drop out if no beacons are detected
         // Monitoring callbacks will be delayed by up to 25 minutes on region exit
@@ -80,12 +80,12 @@ class BeaconReferenceApplication: Application() {
         // if you only want to detect beacons with a specific UUID, change the id1 paremeter to
         // a UUID like Identifier.parse("2F234454-CF6D-4A0F-ADF2-F4911BA9FFA6")
         region = Region("all-beacons", null, null, null)
-        beaconManager.startMonitoring(region)
+        //beaconManager.startMonitoring(region)
         beaconManager.startRangingBeacons(region)
         // These two lines set up a Live Data observer so this Activity can get beacon data from the Application class
         val regionViewModel = BeaconManager.getInstanceForApplication(this).getRegionViewModel(region)
         // observer will be called each time the monitored regionState changes (inside vs. outside region)
-        regionViewModel.regionState.observeForever( centralMonitoringObserver)
+        // regionViewModel.regionState.observeForever( centralMonitoringObserver)
         // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
         regionViewModel.rangedBeacons.observeForever( centralRangingObserver)
     }
